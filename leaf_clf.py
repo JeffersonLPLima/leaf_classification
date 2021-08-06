@@ -11,24 +11,6 @@ from matplotlib import pyplot as plt
 
 
 
-train = pd.read_csv('train.csv')
-test_ = pd.read_csv('test.csv')
-
-correlations = train.corr()
-fig = plt.figure()
-ax = fig.add_subplot(111)
-cax = ax.matshow(correlations, vmin=-1, vmax=1)
-fig.colorbar(cax)
-##ticks = numpy.arange(0,9,1)
-##ax.set_xticks(ticks)
-##ax.set_yticks(ticks)
-##ax.set_xticklabels(names)
-##ax.set_yticklabels(names)
-plt.show()
-##plotting correlation ##
-
-
-input()
 
 
 img_dir = 'images/'
@@ -44,6 +26,27 @@ def encode(train, test):
     test = test_.drop('id', axis=1)
 
     return train, labels, test, classes
+
+
+
+def correlation(dataset, dataset_test, threshold):
+    col_corr = set() # Set of all the names of deleted columns
+    corr_matrix = dataset.corr()
+    for i in range(len(corr_matrix.columns)):
+        for j in range(i):
+            if abs(corr_matrix.iloc[i, j]) >= threshold:
+                colname = corr_matrix.columns[i] # getting the name of column
+                col_corr.add(colname)
+                if colname in dataset.columns:
+                    del dataset[colname] # deleting the column from the dataset
+                    del dataset_test[colname]
+    return dataset, dataset_test
+    
+train = pd.read_csv('train.csv')
+test_ = pd.read_csv('test.csv')
+train_copy = train.copy()
+train, test_ = correlation(train, test_,0.95)
+
 
 def logloss(y_true, y_pred):
     from sklearn.metrics import log_loss
@@ -63,6 +66,7 @@ def load_image_data():
 train, labels, test, classes = encode(train, test_)
 train = train.values
 X_test = test.values
+ 
 
 img_data, _2d_images = load_image_data()
 
@@ -94,8 +98,14 @@ X_train = scaler.transform(X_train)
 X_valid = scaler.transform(X_valid)
 X_test = scaler.transform(X_test)
 
-  
+
+
+print(X_train.shape)
+print(X_valid.shape)
+print(X_test.shape)
+
 print("Done")
+
 ##
 
 ## Classifying
@@ -121,11 +131,9 @@ from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
 from keras import backend as K
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping
 
-
 batch_size = 32
 num_classes = len(classes)
 epochs = 100
-
 
 y_train_cat = keras.utils.to_categorical(y_train, num_classes)  #convertendo as classes em vetores binários (one hot encoding)
 y_valid_cat = keras.utils.to_categorical(y_valid, num_classes)  
@@ -199,11 +207,4 @@ frame.to_csv('submisiondf_1_5.csv')
 ##plt.xlabel('epoch')
 ##plt.legend(['train', 'val'], loc='upper left')
 ##plt.show()
-### summarize history for loss
-##plt.plot(history.history['loss'])
-##plt.plot(history.history['val_loss'])
-##plt.title('model loss')
-##plt.ylabel('loss')
-##plt.xlabel('epoch')
-##plt.legend(['train', 'val'], loc='upper left')
-##plt.show()
+

@@ -59,26 +59,63 @@ Base de Dados -> 99 classes com 10 amostras cada. Cada amostra contém 192 atrib
 
 	o PCA não diminui o loss comparado ao melhor modelo sem PCA.
 
+	1.5  Correlação
+		1.5.1 Eliminando Variáveis correlacionadas. 0.99   166
+
+			1-NN -  erro:  0.010101010101010055  loss: 0.34887652924162094
+			SVM -  erro:  0.010101010101010055  loss: 2.324616816057874
+			Tree -  erro:  0.35858585858585856  loss: 12.385116788074134
+			MLP - erro:  0.015151515151515138  loss:  0.05091845349530981     -> test.csv 0.05426
+					
+		1.5.2 Eliminando Variáveis correlacionadas. 0.95 129	
+		
+			1-NN -  erro:  0.015151515151515138  loss: 0.523314793862382
+			SVM -  erro:  0.010101010101010055  loss: 2.3440622709421635
+			Tree -  erro:  0.4242424242424242  loss: 14.652814228144024
+			MLP - erro:  0.010101010101010055  loss:  0.07808418325477778
+
+		1.5.3 Eliminando Variáveis correlacionadas. 0.90  129
+
+			1-NN -  erro:  0.015151515151515138  loss: 0.523314793862382
+			SVM -  erro:  0.010101010101010055  loss: 2.3392098802997694
+			Tree -  erro:  0.4191919191919192  loss: 14.478375963523266
+			MLP - erro:  0.015151515151515138  loss:  0.07265973785384135
+
+	Modelo Escolhido: MLP
+
+	patience =4
+
+	MLP1 - erro:  0.005050505050505083  loss:  0.03393438823445879   -> 0.0512
+	MLP2 - erro:  0.005050505050505083  loss:  0.023405829266964863  -> 0.05101
+
+	patience =10
+
+	MLP1 - erro:  0.02020202020202022  loss:  0.10494627734890791   -> 0.06747
+	MLP2 - erro:  0.0  				   loss:  0.007784688712251749   -> 0.04721
+
+
 2 - Imagem
 
-	Problema: Tamanhos diferentes
-			Redimensionamento tradicional (interpolação): 30% em média com K-NN
+	Problema 1: Tamanhos diferentes
+			
+
+			Redimensionamento tradicional (interpolação) pode deixar as imagens distorcidas
+
+			Solução: Resolvi redimensionando mandento o aspect ratio, adicionando bordas. 
 
 
-			Resolvi redimensionando mandento o aspect ratio, adicionando bordas. K-NN -> 98% (PORÉM O LOSS é ALTO no teste)
+	Seugindo o notebook + recomendação do professor:	Unir Atributos numéricos + Imagens
 
 
-			Testei várias CNN e não ta conseguindo aprender... não sei sei pq. testei até uma ResNet de 18 camadas.
+	Resultado:
+
+		
+
+	Problema 2: São Muitas características e poucos exemplos (10 imagens por classe). 
+
+	Problema 3: Rotação: https://photos.google.com/share/AF1QipOe2qlTpHIv_dUAWvuXofGsj5B_Laj6JhCdoxLo924cFcKqcvXifScGF3Wc3MIQ9w?key=YURYZGlYWjVQWTZsRkw1OV80cUlJUTJ5cDZwUlJn
 
 
+	Solução para o problema 2 e 3: Data Augmentation
 
-	O que dá pra fazer agora:
-
-
-	1 - Utilizar Base Numérica + Imagem com os classificadores e depois utilziara o método da soma ou voto majoritário.
-
-
-	2 - Tentar seguir isso: https://www.kaggle.com/abhmul/keras-convnet-lb-0-0052-w-visualization/notebook
-
-	3 - https://www.kaggle.com/tobikaggle/nn-through-keras-copied-mod-shuffle plots
-
+	
