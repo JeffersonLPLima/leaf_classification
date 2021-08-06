@@ -1,0 +1,84 @@
+Projeto AM
+
+
+Base de Dados -> 99 classes com 10 amostras cada. Cada amostra contém 192 atributos
+
+1 - Base Numérica
+	1.1 Original (Sem pré-processamento)
+			1-NN -  erro:  0.09090909090909094  loss: 3.1398887631737984
+			SVM -  erro:  0.18181818181818177  loss: 4.599241016183885
+			Tree -  erro:  0.35858585858585856  loss: 12.38511678807413
+			MLP - erro:  0.060606061208127726  loss:  0.21539277937075105
+
+			Melhor: MLP -> loss no test.csv -> 0.21524
+
+	1.2 Padronização "Normalização" (0,1)
+			1-NN -  erro:  0.010101010101010055  loss: 0.34887652924162094
+			SVM -  erro:  0.010101010101010055  loss: 2.362940922659111
+			Tree -  erro:  0.3434343434343434  loss: 11.861801994211845
+			MLP - erro:  0.005050505050505083  loss:  0.0264500207973249
+			
+
+			Melhor: MLP -> loss no test.csv -> 0.05026
+    
+    1.3 MinMaxScaler
+    		1-NN -  erro:  0.005050505050505083  loss: 0.1744382646208599
+			SVM -  erro:  0.02020202020202022  loss: 4.664132385817188
+			Tree -  erro:  0.3535353535353535  loss: 12.210678523453367
+			MLP - erro:  0.015151515151515138  loss:  0.0856235475853236
+
+			Melhor: MLP -> loss no test.csv -> 0.08350
+
+	Escolhido: Padronização
+
+    1.4 Utlizando PCA
+    1.4.1 PCA n_components = '.99', svd_solver = 'full'  -> features: 82	
+
+		1-NN -  erro:  0.09595959595959591  loss: 3.314327027794559
+		SVM -  erro:  0.04040404040404044  loss: 2.2845249699584236
+		Tree -  erro:  0.4797979797979798  loss: 16.571635138972397
+		MLP - erro:  0.03535353535353536  loss:  0.1985530596640375
+
+	1.4.2 PCA n_components = '.95', svd_solver = 'full'  -> features: 48
+
+		1-NN -  erro:  0.06060606060606055  loss: 2.0932591754492313
+		SVM -  erro:  0.025252525252525304  loss: 2.3114698706882564
+		Tree -  erro:  0.4040404040404041  loss: 13.955061169660981
+		MLP - erro:  0.02020202020202022  loss:  0.10636424502790576
+
+	1.4.3 PCA n_components = '.90', svd_solver = 'full'  -> features: 32
+
+		1-NN -  erro:  0.08080808080808077  loss: 2.7910122339322765
+		SVM -  erro:  0.06565656565656564  loss: 2.367946633937976
+		Tree -  erro:  0.4444444444444444  loss: 15.350567286627069
+		MLP - erro:  0.0505050505050505  loss:  0.1528480128958972
+
+
+
+		Melhor -> MLP -> PCA n_components = '.95', svd_solver = 'full'  -> loss no test.csv ->  0.18233 (1.4.2)
+
+	o PCA não diminui o loss comparado ao melhor modelo sem PCA.
+
+2 - Imagem
+
+	Problema: Tamanhos diferentes
+			Redimensionamento tradicional (interpolação): 30% em média com K-NN
+
+
+			Resolvi redimensionando mandento o aspect ratio, adicionando bordas. K-NN -> 98% (PORÉM O LOSS é ALTO no teste)
+
+
+			Testei várias CNN e não ta conseguindo aprender... não sei sei pq. testei até uma ResNet de 18 camadas.
+
+
+
+	O que dá pra fazer agora:
+
+
+	1 - Utilizar Base Numérica + Imagem com os classificadores e depois utilziara o método da soma ou voto majoritário.
+
+
+	2 - Tentar seguir isso: https://www.kaggle.com/abhmul/keras-convnet-lb-0-0052-w-visualization/notebook
+
+	3 - https://www.kaggle.com/tobikaggle/nn-through-keras-copied-mod-shuffle plots
+
